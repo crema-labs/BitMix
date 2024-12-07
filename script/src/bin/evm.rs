@@ -11,12 +11,13 @@
 //! ```
 
 use alloy_sol_types::SolType;
-use btc_lib::PublicValuesStruct;
+use btc_lib::{btc::BitMix, PublicValuesStruct};
 use clap::{Parser, ValueEnum};
 use serde::{Deserialize, Serialize};
 use sp1_sdk::{
     include_elf, HashableKey, ProverClient, SP1ProofWithPublicValues, SP1Stdin, SP1VerifyingKey,
 };
+use std::fs;
 use std::path::PathBuf;
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -26,8 +27,8 @@ pub const BITMIX_ELF: &[u8] = include_elf!("bitmix-program");
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct EVMArgs {
-    #[clap(long, default_value = "20")]
-    n: u32,
+    #[clap(long, value_parser)]
+    input: String,
     #[clap(long, value_enum, default_value = "groth16")]
     system: ProofSystem,
 }
@@ -62,11 +63,16 @@ fn main() {
     // Setup the program.
     let (pk, vk) = client.setup(BITMIX_ELF);
 
-    // Setup the inputs.
     let mut stdin = SP1Stdin::new();
-    stdin.write(&args.n);
 
-    println!("n: {}", args.n);
+    // Setup the inputs.
+    let input_file = format!("{}.json", args.input);
+
+    let file_content = fs::read_to_string(input_file).unwrap();
+    let bitmix_input: BitMix = serde_json::from_str(&file_content).unwrap();
+
+    stdin.write(&bitmix_input);
+
     println!("Proof System: {:?}", args.system);
 
     // Generate the proof based on the selected proof system.
@@ -91,6 +97,8 @@ fn create_proof_fixture(
         block_hashes,
         pub_a_x,
         pub_a_y,
+        pub_c_x ,
+        pub_c_y,
         cipher,
     } = PublicValuesStruct::abi_decode(bytes, true).unwrap();
 

@@ -719,6 +719,7 @@ dependencies = [
  "libsecp256k1",
  "once_cell",
  "serde",
+ "serde_json",
  "sha2 0.10.8",
 ]
 

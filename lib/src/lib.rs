@@ -12,6 +12,8 @@ sol! {
         bytes32[1] memory block_hashes;
         bytes32 pub_a_x;
         bytes32 pub_a_y;
+        bytes32 pub_c_x;
+        bytes32 pub_c_y;
         bytes memory cipher;
     }
 }
@@ -254,13 +256,13 @@ fn point_addition(pub_a_x: &[u8], pub_a_y: &[u8], pub_b_x: &[u8], pub_b_y: &[u8]
     pub_a_slice.extend_from_slice(pub_a_x);
     pub_a_slice.extend_from_slice(pub_a_y);
     let pub_a =
-        PublicKey::parse_slice(&pub_a_slice, Some(libsecp256k1::PublicKeyFormat::Full)).unwrap();
+        PublicKey::parse_slice(&pub_a_slice, Some(libsecp256k1::PublicKeyFormat::Raw)).unwrap();
 
     let mut pub_b_slice = Vec::new();
     pub_b_slice.extend_from_slice(pub_b_x);
     pub_b_slice.extend_from_slice(pub_b_y);
     let pub_b =
-        PublicKey::parse_slice(&pub_b_slice, Some(libsecp256k1::PublicKeyFormat::Full)).unwrap();
+        PublicKey::parse_slice(&pub_b_slice, Some(libsecp256k1::PublicKeyFormat::Raw)).unwrap();
     let pub_c = PublicKey::combine(&[pub_a, pub_b]).unwrap();
     let pub_c_bytes = pub_c.serialize_compressed();
 
@@ -317,6 +319,7 @@ mod tests {
             .unwrap();
         let data = b"Hello, world!";
         let encrypted_data = encrypt_ecies(&x, &y, data);
+        println!("{:?}", hex::encode(encrypted_data));
     }
 
     #[test]
@@ -356,13 +359,17 @@ mod tests {
         let pub_b = PublicKey::from_secret_key(&sec_key_b);
 
         let sec_key_c = SecretKey::parse_slice(&priv_key_c).unwrap();
-        let pub_c = PublicKey::from_secret_key(&sec_key_c).serialize_compressed();
+        let pub_c = PublicKey::from_secret_key(&sec_key_c);
 
-        let pub_ab = PublicKey::combine(&[pub_a, pub_b])
-            .unwrap()
-            .serialize_compressed();
 
-        let script_pubkey = calculate_witness_script_address(pub_ab, pub_c);
+        println!("pub_a: {:?} pub_b: {:?} pub_c: {:?} {}", pub_a.serialize()[32], pub_b.serialize()[32], pub_c.serialize(), pub_c.serialize()[32]);
+
+        let pub_ab = PublicKey::combine(&[pub_a, pub_b]).unwrap();
+
+        let script_pubkey = calculate_witness_script_address(
+            pub_ab.serialize_compressed(),
+            pub_c.serialize_compressed(),
+        );
 
         assert_eq!(
             script_pubkey,

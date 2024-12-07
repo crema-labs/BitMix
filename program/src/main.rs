@@ -19,7 +19,7 @@ pub fn main() {
     let verifier = sp1_zkvm::io::read::<BitMix>();
 
     // Compute the n'th fibonacci number using a function from the workspace lib crate.
-    let (verified, block_hashes, pub_a_x, pub_a_y, cipher_text) = verifier.verify();
+    let (verified, block_hashes, pub_a_x, pub_a_y,pub_c_x, pub_c_y, cipher_text) = verifier.verify();
 
     assert!(verified);
 
@@ -32,6 +32,8 @@ pub fn main() {
         block_hashes: block_hashes_array,
         pub_a_x: alloy_sol_types::private::FixedBytes(pub_a_x),
         pub_a_y: alloy_sol_types::private::FixedBytes(pub_a_y),
+        pub_c_x: alloy_sol_types::private::FixedBytes(pub_c_x),
+        pub_c_y: alloy_sol_types::private::FixedBytes(pub_c_y),
         cipher,
     });
     // Commit to the public values of the program. The final proof will have a commitment to all the

@@ -4,16 +4,19 @@ pragma solidity ^0.8.20;
 import {ISP1Verifier} from "@sp1-contracts/ISP1Verifier.sol";
 
 struct PublicValuesStruct {
-    uint32 n;
-    uint32 a;
-    uint32 b;
+    bytes32[1] block_hashes;
+    bytes32 pub_a_x;
+    bytes32 pub_a_y;
+    bytes32 pub_c_x;
+    bytes32 pub_c_y;
+    bytes cipher;
 }
 
 /// @title Fibonacci.
 /// @author Succinct Labs
 /// @notice This contract implements a simple example of verifying the proof of a computing a
 ///         fibonacci number.
-contract Fibonacci {
+contract BitMix {
     /// @notice The address of the SP1 verifier contract.
     /// @dev This can either be a specific SP1Verifier for a specific version, or the
     ///      SP1VerifierGateway which can be used to verify proofs for any version of SP1.
@@ -32,13 +35,19 @@ contract Fibonacci {
     /// @notice The entrypoint for verifying the proof of a fibonacci number.
     /// @param _proofBytes The encoded proof.
     /// @param _publicValues The encoded public values.
-    function verifyFibonacciProof(bytes calldata _publicValues, bytes calldata _proofBytes)
-        public
-        view
-        returns (uint32, uint32, uint32)
-    {
-        ISP1Verifier(verifier).verifyProof(fibonacciProgramVKey, _publicValues, _proofBytes);
-        PublicValuesStruct memory publicValues = abi.decode(_publicValues, (PublicValuesStruct));
+    function verifyBitMixProof(
+        bytes calldata _publicValues,
+        bytes calldata _proofBytes
+    ) public view returns (uint32, uint32, uint32) {
+        ISP1Verifier(verifier).verifyProof(
+            fibonacciProgramVKey,
+            _publicValues,
+            _proofBytes
+        );
+        PublicValuesStruct memory publicValues = abi.decode(
+            _publicValues,
+            (PublicValuesStruct)
+        );
         return (publicValues.n, publicValues.a, publicValues.b);
     }
 }
