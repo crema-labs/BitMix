@@ -9,21 +9,31 @@
 sp1_zkvm::entrypoint!(main);
 
 use alloy_sol_types::SolType;
-use fibonacci_lib::{fibonacci, PublicValuesStruct};
+use btc_lib::{btc::BitMix, PublicValuesStruct};
 
 pub fn main() {
     // Read an input to the program.
     //
     // Behind the scenes, this compiles down to a custom system call which handles reading inputs
     // from the prover.
-    let n = sp1_zkvm::io::read::<u32>();
+    let verifier = sp1_zkvm::io::read::<BitMix>();
 
     // Compute the n'th fibonacci number using a function from the workspace lib crate.
-    let (a, b) = fibonacci(n);
+    let (verified, block_hashes, pub_a_x, pub_a_y, cipher_text) = verifier.verify();
+
+    assert!(verified);
 
     // Encode the public values of the program.
-    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b });
+    let block_hashes_array: [alloy_sol_types::private::FixedBytes<32>; 1] =
+        [alloy_sol_types::private::FixedBytes::from(block_hashes[0])];
+    let cipher = alloy_sol_types::private::Bytes::from(cipher_text);
 
+    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct {
+        block_hashes: block_hashes_array,
+        pub_a_x: alloy_sol_types::private::FixedBytes(pub_a_x),
+        pub_a_y: alloy_sol_types::private::FixedBytes(pub_a_y),
+        cipher,
+    });
     // Commit to the public values of the program. The final proof will have a commitment to all the
     // bytes that were committed to.
     sp1_zkvm::io::commit_slice(&bytes);

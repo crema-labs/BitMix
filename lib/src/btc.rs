@@ -1,6 +1,9 @@
 use crate::*;
 use libsecp256k1::{PublicKey, SecretKey};
-struct BitMix {
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BitMix {
     pub tx_hex: Vec<u8>,
     pub proof: Vec<[u8; 32]>,
     pub tx_index: u64,
@@ -15,7 +18,7 @@ struct BitMix {
 }
 
 impl BitMix {
-    pub fn verify(&self) -> (bool, Vec<u8>) {
+    pub fn verify(&self) -> (bool, Vec<[u8; 32]>, [u8; 32], [u8; 32], Vec<u8>) {
         let (tx_hash, _prevouts, outpoints) = parse_tx(&self.tx_hex);
         let merkle_root = calculate_merkle_root(&tx_hash, self.tx_index, &self.proof);
 
@@ -28,7 +31,7 @@ impl BitMix {
         let combined_pub_key =
             point_addition(&self.pub_a_x, &self.pub_a_y, &self.pub_b_x, &self.pub_b_y);
 
-        let script_pub_key = construct_witness_script(combined_pub_key, pub_c_bytes, 72);
+        let script_pub_key = construct_witness_script(combined_pub_key, pub_c_bytes);
 
         assert!(compare_bytes(
             outpoints[self.outpoint_index as usize].spk.clone(),
@@ -39,6 +42,12 @@ impl BitMix {
 
         let cipher_text = encrypt_ecies(&self.pub_a_x, &self.pub_a_y, &self.priv_c[0..32]);
 
-        (true, cipher_text)
+        (
+            true,
+            self.block_hashes.clone(),
+            self.pub_a_x,
+            self.pub_a_y,
+            cipher_text,
+        )
     }
 }
