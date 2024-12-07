@@ -362,7 +362,7 @@ mod tests {
         let pub_c = PublicKey::from_secret_key(&sec_key_c);
 
 
-        println!("pub_a: {:?} pub_b: {:?} pub_c: {:?} {}", pub_a.serialize()[32], pub_b.serialize()[32], pub_c.serialize(), pub_c.serialize()[32]);
+        println!("pub_a: {:?} pub_b: {:?} pub_c: {:?} {}", hex::encode(pub_a.serialize()), pub_b.serialize()[32], pub_c.serialize(), pub_c.serialize()[32]);
 
         let pub_ab = PublicKey::combine(&[pub_a, pub_b]).unwrap();
 
