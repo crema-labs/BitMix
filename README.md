@@ -1,12 +1,124 @@
-# SP1 Project Template
+<a name="BitMix"></a>
 
-This is a template for creating an end-to-end [SP1](https://github.com/succinctlabs/sp1) project
-that can generate a proof of any RISC-V program.
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="#">
+    <img src="client/public/logo.png" alt="Logo" height="80" style="border-radius: 16px;">
+  </a>
 
-## Requirements
+  <p align="center">
+    **BitMix - Seamless Cross-Chain Privacy**
+    <br />
+    <br />
+    <a href="#">Live 🟢</a>
+    |
+    <a href="#">View Demo 🎬</a>
+    |
+    <a href="#screenshots">Screenshots 📸</a>
+  </p>
+</div>
 
-- [Rust](https://rustup.rs/)
-- [SP1](https://docs.succinct.xyz/getting-started/install.html)
+---
+
+## Table of Contents
+
+1. [About The Project](#about-the-project)
+2. [Problem Statement](#problem-statement)
+3. [Solution](#solution)
+4. [How It Works](#how-it-works)
+5. [Use Cases](#use-cases)
+6. [Built With](#built-with)
+7. [Installation](#installation)
+8. [Usage](#usage)
+9. [Screenshots](#screenshots)
+
+---
+
+## About The Project
+
+BitMix is a decentralized platform designed to enable secure and private cross-chain swaps between EVM and Non-EVM networks. Unlike traditional exchanges, BitMix prioritizes privacy using advanced zero-knowledge cryptographic mechanisms and ensures transaction security through locking mechanisms. With BitMix, users can experience reliable, private, and decentralized asset swaps.
+
+---
+
+## Screenshots
+
+<p float="left">
+  <img src="images/ss-1.jpg" width="32%" />
+  <img src="images/ss-2.jpg" width="32%" /> 
+  <img src="images/ss-3.jpg" width="32%" />
+</p>
+
+---
+
+## Problem Statement
+
+Cross-chain swaps between EVM and Non-EVM ecosystems lack privacy, efficiency, and security. This exposes users to significant risks such as identity leaks and transaction failures. Existing solutions, such as THORSwap and RAILGUN, do not comprehensively address these challenges.
+
+---
+
+## Solution
+
+BitMix provides a decentralized service enabling seamless and private swaps between EVM and Non-EVM chains. Key features include:
+
+-   **Privacy**: Zero-knowledge cryptography ensures user anonymity.
+-   **Security**: Advanced locking mechanisms protect funds.
+-   **Decentralization**: Trustless architecture facilitates reliable swaps.
+
+---
+
+## How It Works
+
+1. **Swap Initiation**
+
+    - Alice requests a private swap using `Pub(A)`.
+    - Locks 1 WBTC for 48 hours through a Signed SACP transaction.
+
+2. **Monitor & Listen**
+
+    - Bob creates a random `Priv(B)` and constructs a script address using `Pub(A)` and `Priv(B)`.
+    - Submits a funding transaction to the script address.
+
+3. **Citrea's Verification**
+
+    - Verifies outputs match the expected `scriptPubKey`.
+    - Confirms transaction inclusion in the Bitcoin block.
+    - Checks encryption proof using ECIES.
+
+4. **Completion**
+    - BitMix decrypts Alice's message and constructs a script address using `Priv(A)` + `Pub(B)`.
+    - Finalizes the BTC transaction and releases WBTC.
+
+---
+
+## Use Cases
+
+-   **Private Cryptocurrency Swaps**: Ideal for traders seeking anonymity.
+-   **Secure Wallet Transfers**: Enables safe transfers between custodial and non-custodial wallets.
+-   **DeFi Integration**: Facilitates seamless interaction between DeFi protocols and Bitcoin.
+
+---
+
+## Built With
+
+-   [![Rust][rust]][rust-url]
+-   [![React][react.js]][react-url]
+-   [![Covalent][covalent]][covalent-url]
+
+---
+
+## Installation
+
+To set up the project, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/your-repo/BitMix.git
+    ```
+2. Install dependencies:
+    ```sh
+    yarn
+    ```
 
 ## Running the Project
 
@@ -90,3 +202,24 @@ command:
 ```sh
 SP1_PROVER=network SP1_PRIVATE_KEY=... cargo run --release --bin evm
 ```
+
+---
+
+## Usage
+
+-   **Login**: Access the platform with your Ethereum wallet.
+-   **Define Traits**: Customize your preferences and choose traits for ideal matches.
+-   **Match & Swap**: Use the zero-knowledge-based algorithm for secure and private transactions.
+
+---
+
+<p align="center">
+  Built with ❤️ by Team Crema | ETHIndia 2024
+</p>
+
+[rust]: https://img.shields.io/badge/Rust-orange?style=for-the-badge&logo=rust&logoColor=white
+[rust-url]: https://www.rust-lang.org/
+[react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[react-url]: https://reactjs.org/
+[covalent]: https://img.shields.io/badge/-Covalent-blue
+[covalent-url]: https://www.covalenthq.com/
