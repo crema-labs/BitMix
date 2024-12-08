@@ -68,6 +68,8 @@ BitMix provides a decentralized service enabling seamless and private swaps betw
 
 ## How It Works
 
+<img src=".github/images/flowchart.png" width="98%" />
+
 1. **Swap Initiation**
 
     - Alice requests a private swap using `Pub(A)`.
