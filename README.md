@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="#">
-    <img src="client/public/logo.png" alt="Logo" height="80" style="border-radius: 16px;">
+    <img src=".github/images/logo.png" alt="Logo" height="80" style="border-radius: 16px;">
   </a>
 
   <p align="center">
@@ -44,9 +44,8 @@ BitMix is a decentralized platform designed to enable secure and private cross-c
 ## Screenshots
 
 <p float="left">
-  <img src="images/ss-1.jpg" width="32%" />
-  <img src="images/ss-2.jpg" width="32%" /> 
-  <img src="images/ss-3.jpg" width="32%" />
+  <img src=".github/images/ss-1.jpg" width="50%" />
+  <img src=".github/images/ss-2.jpg" width="50%" /> 
 </p>
 
 ---
