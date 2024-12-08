@@ -44,8 +44,8 @@ BitMix is a decentralized platform designed to enable secure and private cross-c
 ## Screenshots
 
 <p float="left">
-  <img src=".github/images/ss-1.jpg" width="50%" />
-  <img src=".github/images/ss-2.jpg" width="50%" /> 
+  <img src=".github/images/ss-1.png" width="50%" />
+  <img src=".github/images/ss-2.png" width="50%" /> 
 </p>
 
 ---
